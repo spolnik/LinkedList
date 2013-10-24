@@ -1,62 +1,52 @@
 package com.wordpress.nprogramming;
 
-public final class SignleLinkedList<E> implements LinkedList<E> {
+public final class SingleLinkedList<E> implements LinkedList<E> {
 
-    private Node<E> first;
-    private Node<E> last;
+    private Node<E> head;
+    private Node<E> tail;
 
-    public SignleLinkedList() {
-        first = null;
-        last = null;
+    public SingleLinkedList() {
+        head = null;
+        tail = null;
     }
 
     @Override
     public void add(E item) {
-        if (first == null) {
-            first = new Node<>(item);
-            last = first;
+        if (head == null) {
+            head = new Node<>(item);
+            tail = head;
             return;
         }
 
-        Node<E> previous = last;
-        last = new Node<>(item);
-        previous.next = last;
+        Node<E> previous = tail;
+        tail = new Node<>(item);
+        previous.next = tail;
     }
 
     @Override
     public E removeFirst() {
-        if (isEmpty()) {
-            throw new IllegalStateException("List is empty.");
+        checkIfListIsNotEmpty();
+
+        Node<E> deletedNode = head;
+        head = head.next;
+
+        if (head == null) {
+            tail = null;
         }
 
-        Node<E> toBeRemoved = first;
-        first = first.next;
-
-        if (first == null) {
-            last = null;
-        }
-
-        return toBeRemoved.value;
+        return deletedNode.value;
     }
 
     @Override
     public E remove(int index) {
-        if (index < 0 || isEmpty()) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIfIndexValid(index);
 
-        if (first.next == null && index == 0) {
-            Node<E> toBeRemoved = first;
-            clear();
-            return toBeRemoved.value;
-        } else if (index == 0) {
-            Node<E> toBeRemoved = first;
-            first = first.next;
-            return toBeRemoved.value;
+        if (index == 0) {
+            return removeFirst();
         } else {
             int count = 1;
-            Node<E> current = first.next;
-            Node<E> previous = first;
+            Node<E> current = head.next;
+            Node<E> previous = head;
 
             while (current != null) {
                 if (count == index) {
@@ -76,22 +66,22 @@ public final class SignleLinkedList<E> implements LinkedList<E> {
 
     @Override
     public E getFirst() {
-        return first.value;
+        checkIfListIsNotEmpty();
+        return head.value;
     }
 
     @Override
     public E getLast() {
-        return last.value;
+        checkIfListIsNotEmpty();
+        return tail.value;
     }
 
     @Override
     public E get(int index) {
-        if (index < 0 || isEmpty()) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIfIndexValid(index);
 
         int count = 0;
-        Node<E> node = first;
+        Node<E> node = head;
 
         while (node != null) {
             if (count == index) {
@@ -106,12 +96,10 @@ public final class SignleLinkedList<E> implements LinkedList<E> {
 
     @Override
     public void set(int index, E item) {
-        if (index < 0 || isEmpty()) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIfIndexValid(index);
 
         int count = 0;
-        Node<E> node = first;
+        Node<E> node = head;
 
         while (node != null) {
             if (count == index) {
@@ -127,12 +115,12 @@ public final class SignleLinkedList<E> implements LinkedList<E> {
 
     @Override
     public boolean isEmpty() {
-        return first == null;
+        return head == null;
     }
 
     @Override
     public int size() {
-        Node<E> node = first;
+        Node<E> node = head;
         int count = 0;
 
         while (node != null) {
@@ -145,8 +133,20 @@ public final class SignleLinkedList<E> implements LinkedList<E> {
 
     @Override
     public void clear() {
-        first = null;
-        last = null;
+        head = null;
+        tail = null;
+    }
+
+    private void checkIfListIsNotEmpty() {
+        if (isEmpty()) {
+            throw new IllegalStateException("List is empty.");
+        }
+    }
+
+    private void checkIfIndexValid(int index) {
+        if (index < 0 || isEmpty()) {
+            throw new IndexOutOfBoundsException();
+        }
     }
 
     final class Node<E> {

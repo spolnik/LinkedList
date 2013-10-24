@@ -1,7 +1,7 @@
 package com.wordpress.nprogramming;
 
 public interface LinkedList<E> {
-    void add(E item);
+    void add(E value);
 
     E removeFirst();
     E remove(int index);
@@ -10,7 +10,7 @@ public interface LinkedList<E> {
     E getLast();
     E get(int index);
 
-    void set(int index, E item);
+    void set(int index, E value);
 
     boolean isEmpty();
     int size();

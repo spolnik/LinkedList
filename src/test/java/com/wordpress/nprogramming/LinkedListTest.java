@@ -8,13 +8,12 @@ import static junit.framework.Assert.*;
 public class LinkedListTest {
 
     private LinkedList<String> list;
-
     private final static String first = "First";
     private final static String second = "Second";
 
     @Before
     public void setUp() {
-        list = new SignleLinkedList<>();
+        list = new SingleLinkedList<>();
         list.add(first);
         list.add(second);
     }
@@ -81,10 +80,14 @@ public class LinkedListTest {
         list.add("Third");
 
         assertEquals(3, list.size());
+        assertEquals("First", list.getFirst());
+        assertEquals("Third", list.getLast());
 
         list.remove(0);
 
         assertEquals(2, list.size());
+        assertEquals("Second", list.getFirst());
+        assertEquals("Third", list.getLast());
 
         list.clear();
 
@@ -93,5 +96,29 @@ public class LinkedListTest {
         list.add("Third");
 
         assertEquals(1, list.size());
+        assertEquals("Third", list.getFirst());
+        assertEquals("Third", list.getLast());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testGetFirstWhenEmpty() throws Exception {
+        list.clear();
+        list.getFirst();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testGetLastWhenEmpty() throws Exception {
+        list.clear();
+        list.getLast();
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testRemoveOutOfIndex() throws Exception {
+        list.remove(3);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetOutOfIndex() throws Exception {
+        list.get(3);
     }
 }
